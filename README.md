@@ -1,24 +1,17 @@
 # sign_name
 
-## Project setup
+## 签名插件安装
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+npm i sign_name
 ```
 
-### Compiles and minifies for production
+###  插件的使用
+
 ```
-npm run build
+在入口文件main.js中使用
+
+import signName from "sign_name";
+Vue.use(signName);
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[查看详情](https://github.com/Zhoushunshun541/sign_name).
