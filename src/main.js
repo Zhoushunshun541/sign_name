@@ -1,14 +1,23 @@
-import Vue from "vue";
-import { Button, Message } from "element-ui";
-import App from "./App.vue";
+import signName from "./components/sign_name.vue";
 
-Message.install = function(Vue) {
-  Vue.prototype.$message = Message;
-};
-Vue.use(Button);
-Vue.use(Message);
-Vue.config.productionTip = false;
+const components = [signName];
 
-new Vue({
-  render: h => h(App)
-}).$mount("#app");
+/**
+ * 绑定组件
+ * @param Vue
+ */
+function bindComponents(Vue) {
+  components.forEach(component => {
+    Vue.component(component.name, component);
+  });
+}
+/**
+ * 为了使用 Vue.use() 使用插件
+ * https://cn.vuejs.org/v2/api/#Vue-use
+ * @param Vue
+ */
+function install(Vue) {
+  bindComponents(Vue);
+}
+
+export default { install, signName };
