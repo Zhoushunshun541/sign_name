@@ -3,7 +3,7 @@
   "description": "签名插件",
   "author": "周顺顺",
   "bugs": "http://gl.k12cloud.cn/zhoushunshun/k12_eam",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --dest lib ./src/index.js",
@@ -14,6 +14,10 @@
     "lib",
     "src"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zhoushunshun541/sign_name"
+  },
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11"

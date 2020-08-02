@@ -1,16 +1,19 @@
 # sign_name
 
 ## 签名插件安装
+
 ```
 npm i sign_name
 ```
 
-###  插件的使用
+### 插件的使用
 
 ```
 在入口文件main.js中使用
 
 import signName from "sign_name";
+import 'sign_name/lib/sign_name.css'
+
 Vue.use(signName);
 ```
 
@@ -28,6 +31,6 @@ Vue.use(signName);
 
 | 事件    | 说明                                                         | 返回值        |
 | ------- | ------------------------------------------------------------ | ------------- |
-| on-save | 点击保存按钮触发的事件,有签名时返回文件流  无签名时返回false | file \| false |
+| on-save | 点击保存按钮触发的事件,有签名时返回文件流 无签名时返回 false | file \| false |
 
 [查看详情](https://github.com/Zhoushunshun541/sign_name).
