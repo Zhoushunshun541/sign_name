@@ -26,7 +26,7 @@ export default {
     },
     color: {
       type: String,
-      default: '#ccc',
+      default: '#000',
     },
     lineWidth: {
       type: Number || String,
