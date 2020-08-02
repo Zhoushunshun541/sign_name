@@ -1,7 +1,7 @@
 <template>
   <div id="signName" class="sign-name">
     <div class="content">
-      <div>请用正楷在下框写入您的真实姓名：</div>
+      <div class="sign-title">请用正楷在下框写入您的真实姓名：</div>
       <div class="sign-wrap" id="signWrap">
         <canvas id="myCanvas" width="100%" height="100%"></canvas>
       </div>
@@ -19,6 +19,28 @@
 // import axios from 'axios'
 export default {
   name: 'signName',
+  props: {
+    landscape: {
+      type: Boolean,
+      default: true,
+    },
+    color: {
+      type: String,
+      default: '#ccc',
+    },
+    lineWidth: {
+      type: Number || String,
+      default: 3,
+    },
+    lineMax: {
+      type: Number || String,
+      default: 10,
+    },
+    lineMin: {
+      type: Number || String,
+      default: 3,
+    },
+  },
   data() {
     return {
       w: '',
@@ -34,7 +56,8 @@ export default {
   mounted() {
     // 强制横屏
     var evt = 'onorientationchange' in window ? 'orientationchange' : 'resize'
-    window.addEventListener(evt, this.landscape(), false)
+    window.addEventListener(evt, this.setLandscape(), false)
+
     // 初始化
     this.image = ''
     this.mousePressed = false
@@ -51,17 +74,25 @@ export default {
     InitThis() {
       // 触摸屏
       var that = this
+      var title = document.getElementsByClassName('sign-title')[0]
       this.signInfo.addEventListener(
         'touchstart',
         function(event) {
           if (event.targetTouches.length == 1) {
-            event.preventDefault() // 阻止浏览器默认事件，重要
+            event.preventDefault() // 阻止浏览器默认事件，防止翻页滚动啥的
             var touch = event.targetTouches[0]
             // 标记  我要开始签名了
             this.mousePressed = true
             // 因为是横屏
-            that.Draw(touch.pageY, that.w - touch.pageX, false)
-            // that.Draw(touch.pageX, touch.pageY, false)
+            if (that.landscape) {
+              that.Draw(
+                touch.pageY,
+                that.w - touch.pageX - title.clientHeight,
+                false
+              )
+            } else {
+              that.Draw(touch.pageX, touch.pageY - title.clientHeight, false)
+            }
           }
         },
         false
@@ -74,7 +105,15 @@ export default {
             event.preventDefault() // 阻止浏览器默认事件，重要
             var touch = event.targetTouches[0]
             if (this.mousePressed) {
-              that.Draw(touch.pageY, that.w - touch.pageX, true)
+              if (that.landscape) {
+                that.Draw(
+                  touch.pageY,
+                  that.w - touch.pageX - title.clientHeight,
+                  true
+                )
+              } else {
+                that.Draw(touch.pageX, touch.pageY - title.clientHeight, true)
+              }
             }
           }
         },
@@ -99,11 +138,11 @@ export default {
       if (isDown) {
         // 画布的相关设置
         this.canvasContext.beginPath()
-        this.canvasContext.strokeStyle = '#000' //颜色
-        this.canvasContext.lineWidth = 3 //线宽
+        this.canvasContext.strokeStyle = this.color //颜色
+        this.canvasContext.lineWidth = this.lineWidth //线宽
         this.canvasContext.lineJoin = 'round'
-        this.canvasContext.lineMax = 10 //设置画笔最大线宽
-        this.canvasContext.lineMin = 3 //设置画笔最小线宽
+        this.canvasContext.lineMax = this.lineMax //设置画笔最大线宽
+        this.canvasContext.lineMin = this.lineMin //设置画笔最小线宽
         this.canvasContext.linePressure = 1.2 //设置画笔笔触压力
         this.canvasContext.smoothness = 30 //设置画笔笔触大小变化的平滑度。
         // 从某一个点 移动到另一个点
@@ -121,7 +160,6 @@ export default {
     },
     // 清除绘画
     clearArea() {
-      console.log('清空画板')
       this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
       this.canvasContext.clearRect(
         0,
@@ -140,12 +178,10 @@ export default {
       blank.height = canvas.height
       // 如果数据源相等  说明当前的canvas没有进行签名
       if (canvas.toDataURL() == blank.toDataURL()) {
-        this.$emit('getImgInfo', false)
+        this.$emit('on-save', false)
         return
       } else {
         var image = canvas.toDataURL('image/png') //得到生成后的签名base64位  url 地址
-        console.log(image)
-        this.$emit('getImgInfo', image)
         //将base64转换为文件
         var arr = image.split(','),
           mime = arr[0].match(/:(.*?);/)[1],
@@ -156,29 +192,18 @@ export default {
           u8arr[n] = bstr.charCodeAt(n)
         }
         var file = new File([u8arr], 'signName.png', { type: mime })
-        const data = new FormData()
-        data.append('file', file)
-        // axios
-        //   .post('http://121.41.99.232:20001/shard_upload', data, {
-        //     headers: {
-        //       token:
-        //         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbiI6InRvYiIsImNoaWxkX3VzZXJfaWQiOjU1Niwic2Nob29sX2NvZGUiOiJrMTJzY2hvb2xfMDJfdGVzdCIsInVzZXJfaWQiOjE2ODN9.pY6RCE0mcZGxqmi3UArtaeC0W2iwbRQ9Oo8vLw9CA7c'
-        //     }
-        //   })
-        //   .then(res => {
-        //     console.log(res)
-        //   })
+        this.$emit('on-save', file)
       }
     },
     // 强制横屏
-    landscape() {
+    setLandscape() {
       var w = document.documentElement.clientWidth
       var h = document.documentElement.clientHeight
       this.w = w
       this.h = h
       var el = document.getElementById('signName')
       // 说明是竖屏
-      if (w < h) {
+      if (this.landscape) {
         el.style.width = h + 'px'
         el.style.height = w + 'px'
         el.style.top = (h - w) / 2 + 'px'
@@ -205,6 +230,12 @@ export default {
   z-index: 2001;
   margin-top: -10.6vw;
   transform: rotate(90deg);
+}
+html,
+body {
+  /* 重置默认样式 */
+  margin: 0;
+  padding: 0;
 }
 @media screen and (orientation: portrait) {
   html {
