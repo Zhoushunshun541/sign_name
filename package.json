@@ -3,7 +3,7 @@
   "description": "签名插件",
   "author": "周顺顺",
   "bugs": "http://gl.k12cloud.cn/zhoushunshun/k12_eam",
-  "version": "0.3.3",
+  "version": "1.0.0",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --dest lib ./src/index.js",

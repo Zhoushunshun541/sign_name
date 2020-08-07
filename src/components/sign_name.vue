@@ -7,8 +7,8 @@
       </div>
     </div>
     <div class="fix-btn flex">
-      <button size="large" @click="clearArea()">清除</button>
-      <button size="large" type="primary" @click="saveSign()">
+      <button class="clear-btn" @click="clearArea()">清除</button>
+      <button class="submit-btn" @click="saveSign()">
         提交
       </button>
     </div>
@@ -224,13 +224,6 @@ export default {
 </script>
 
 <style lang="less">
-.sign-message-ele {
-  top: 50% !important;
-  left: 45%;
-  z-index: 2001;
-  margin-top: -10.6vw;
-  transform: rotate(90deg);
-}
 html,
 body {
   /* 重置默认样式 */
@@ -282,12 +275,24 @@ body {
     justify-content: center;
     position: absolute;
     bottom: 2.6667vw;
+    .submit-btn {
+      background: #649cee;
+      border-radius: 5.1vw;
+      color: #fff;
+      border: 1px solid #649cee;
+    }
+    .clear-btn {
+      border: 1px solid #649cee;
+      color: #649cee;
+      background: transparent;
+    }
     button {
       width: 26vw;
       padding: 0 5.3vw;
       height: 8vw;
+      font-weight: 600;
+      font-size: 4.27vw;
       line-height: 8vw;
-      font-size: 4vw;
       margin: 0 4vw;
     }
   }
