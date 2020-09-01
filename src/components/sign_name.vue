@@ -223,7 +223,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 html,
 body {
   /* 重置默认样式 */
